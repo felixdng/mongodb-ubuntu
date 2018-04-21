@@ -6,6 +6,10 @@ https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/
 [csdn博客: linux 下安装mongocxx] https://blog.csdn.net/qq_35001989/article/details/76703824
 [csdn博客: CentOS7下mongoc安装，验证] https://blog.csdn.net/qq_35001989/article/details/76652949
 [csdn博客：cmake 安装] https://blog.csdn.net/qq_35001989/article/details/76618795
+
+本文使用的文件下载链接：
+链接：https://pan.baidu.com/s/1VOfn0faWb9CbPEkzrcYuEg 密码：o89h
+
 /* ============================================================ */
 
 一．安装编译工具
