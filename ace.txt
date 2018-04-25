@@ -1,0 +1,75 @@
+ubuntu14.04 编译ACE源码记录：
+
+1. 到官网下载源码 http://download.dre.vanderbilt.edu/
+我这里下载的是 http://download.dre.vanderbilt.edu/previous_versions/ACE-6.4.7.tar.bz2
+
+cd ~/
+tar -xvf ACE-6.4.7.tar.bz2
+解压到home目录下，得到目录ACE_wrappers
+
+2. 设置环境变量
+cd ~/
+export ACE_ROOT=/home/yourname/ACE_wrappers
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ACE_ROOT/ace
+
+yourname是用户名，比如我的是/home/dzq/ACE_wrappers
+
+3. 创建config.h
+cd $ACE_ROOT/ace/
+vim config.h
+写入下面内容：
+#include "ace/config-linux.h"
+
+4. 创建platform_macros.GNU
+cd $ACE_ROOT/include/makeinclude/
+vim platform_macros.GNU
+写入下面内容：
+include $(ACE_ROOT)/include/makeinclude/platform_linux.GNU
+
+5. 指定安装目录
+在 platform_macros.GNU 里写入下面内容：
+INSTALL_PREFIX=/home/yourname/ace_install_dir/
+
+6. 64位 linux 需要作个小修改：
+vim $ACE_ROOT/include/makeinclude/platform_linux.GNU
+找到如下几行：
+ifeq ($(buildbits),32)
+FLAGS_C_CC += -m32
+LDFLAGS += -m32
+endif
+ifeq ($(buildbits),64)
+FLAGS_C_CC += -m64
+LDFLAGS += -m64
+endif
+
+修改为：
+ifeq ($(buildbits),32)
+FLAGS_C_CC += -m32
+LDFLAGS += -m32
+endif
+ifeq ($(buildbits),64)
+FLAGS_C_CC += -m64
+FLAGS_C_CC += -fPIC           //此行是添加的
+LDFLAGS += -m64
+endif
+
+7. 编译安装
+cd $ACE_ROOT/
+make -j4
+make install           //如果安装目录指定在/usr/local，需要加权限sudo
+
+8. 测试
+创建文件helloworld.cpp，代码如下：
+#include "ace/Log_Msg.h"
+int ACE_TMAIN(int argc, char* argv[])
+{
+    ACE_DEBUG((LM_DEBUG, ACE_TEXT("Hello World!\n")));
+    return 0;
+}
+
+编译
+g++  -I /home/dzq/libACE/include  -L /home/dzq/libACE/lib/ helloworld.cpp -o helloworld  -lACE
+
+运行
+./helloworld
+输入Hello World!验证成功
