@@ -8,7 +8,7 @@ tar -xvf ACE-6.4.7.tar.bz2
 解压到home目录下，得到目录ACE_wrappers
 
 2. 设置环境变量
-cd ~/
+vim ~/.bashrc
 export ACE_ROOT=/home/yourname/ACE_wrappers
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ACE_ROOT/ace
 
@@ -58,7 +58,13 @@ cd $ACE_ROOT/
 make -j4
 make install           //如果安装目录指定在/usr/local，需要加权限sudo
 
-8. 测试
+8. 设置环境变量
+vim ~/.bashrc
+#export ACE_ROOT=/home/yourname/ACE_wrappers                   //注释掉这行
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ACE_ROOT/ace         //注释掉这行
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/dzq/libACE/lib   //添加这行
+
+9. 测试
 创建文件helloworld.cpp，代码如下：
 #include "ace/Log_Msg.h"
 int ACE_TMAIN(int argc, char* argv[])
