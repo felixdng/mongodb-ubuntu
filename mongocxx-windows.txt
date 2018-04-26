@@ -1,0 +1,47 @@
+Windows下安装mongodb c cxx driver
+
+参考网址：https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/
+http://mongoc.org/libmongoc/current/installing.html
+
+1. 安装vs2015
+2. 安装cmake
+到官网https://cmake.org/download/下载最新版本
+或者到https://cmake.org/files/下载旧版本
+我这里下载的是cmake-3.9.0-rc1-win32-x86.msi
+直接安装就好
+
+3. 安装boost
+官网https://www.boost.org/
+历史版本https://sourceforge.net/projects/boost/files/boost-binaries/
+我这里下载的是https://sourceforge.net/projects/boost/files/boost-binaries/1.66.0/ 的boost_1_66_0-msvc-14.1-64-1.exe
+直接安装
+
+4. 编译mongoc driver
+下载网址：https://github.com/MongoDB/mongo-c-driver/releases/download/1.6.3/mongo-c-driver-1.6.3.tar.gz
+解压mongo-c-driver-1.6.3.tar.gz到D:/
+打开cmd
+d:
+cd mongo-c-driver-1.6.3\src\libbson
+cmake -G "Visual Studio 14 2015 Win64" "-DCMAKE_INSTALL_PREFIX=D:\mongo-c-driver" "-DCMAKE_BUILD_TYPE=Release"  //Debug : debug版本，Release : release版本
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe /p:Configuration=Release ALL_BUILD.vcxproj                //msbuild.exe具体的路径在C:\Windows\Microsoft.NET\路径下搜索
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe /p:Configuration=Release INSTALL.vcxproj
+
+cd mongo-c-driver-1.6.3\
+cmake -G "Visual Studio 14 2015 Win64" "-DENABLE_SSL=WINDOWS" "-DENABLE_SASL=SSPI" "-DCMAKE_INSTALL_PREFIX=D:\mongo-c-driver" "-DCMAKE_PREFIX_PATH=D:\mongo-c-driver" "-DCMAKE_BUILD_TYPE=Release"
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe /p:Configuration=Release ALL_BUILD.vcxproj
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe /p:Configuration=Release INSTALL.vcxproj
+
+
+5. 编译mongocxx driver
+下载网址：https://github.com/mongodb/mongo-cxx-driver/archive/r3.1.2.tar.gz
+解压r3.1.2.tar.gz到D:/
+打开cmd
+d:
+编辑mongo-cxx-driver-r3.1.2\CMakeLists.txt，添加一下内容：
+include_directories(../mongo-c-driver/include/libbson-1.0 ../mongo-c-driver/include/libmongoc-1.0)
+link_directories(../mongo-c-driver/lib)
+
+cd mongo-cxx-driver-r3.1.2\build
+cmake -G "Visual Studio 14 Win64" -DCMAKE_INSTALL_PREFIX=D:\mongo-cxx-driver -DCMAKE_PREFIX_PATH=D:\mongo-cxx-driver -DLIBBSON_DIR=D:\mongo-c-driver\lib -DLIBMONGOC_DIR=D:\mongo-c-driver\lib -DBOOST_ROOT=D:\MyProgram\boost_1_66_0 ..
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe ALL_BUILD.vcxproj
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe INSTALL.vcxproj
